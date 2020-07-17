@@ -51,8 +51,7 @@ public:
     mqtt::async_client* _client;
     callback* _cb;
     action_listener* _actionListener;
-
-
+     mqtt::connect_options* _connOpts;
 
     DNRLogger* _logger;
 

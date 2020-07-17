@@ -40,11 +40,12 @@ void MQTTPublisher::init()
     _client = new mqtt::async_client(_address, _clientId);
     _actionListener = new action_listener(this, "MQTTPublisher");
     mqtt::connect_options connOpts;
-    connOpts.set_keep_alive_interval(20);
-    connOpts.set_automatic_reconnect(true);
-    connOpts.set_connect_timeout(_timeout);
+    _connOpts = new mqtt::connect_options;
+    _connOpts->set_keep_alive_interval(20);
+    _connOpts->set_automatic_reconnect(true);
+    _connOpts->set_connect_timeout(_timeout);
 
-    _cb = new callback(this, *_client, connOpts, *_actionListener);
+    _cb = new callback(this, *_client, *_connOpts, *_actionListener);
     _client->set_callback(*_cb);
 
 }
@@ -79,9 +80,8 @@ void MQTTPublisher::Stop()
                 conntok->wait();
 
                 delete _client;
-                _client = nullptr;
                 delete _cb;
-                _cb = nullptr;
+                delete _connOpts ;
 
             }
 

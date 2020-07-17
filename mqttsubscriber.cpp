@@ -18,6 +18,8 @@ MQTTSubscriber::MQTTSubscriber(const std::__cxx11::string &address, const std::_
     sprintf(buffer,"%d",clid);
     _clientID = buffer;
 
+    _connOpts = new mqtt::connect_options;
+
 }
 
 MQTTSubscriber::~MQTTSubscriber()
@@ -69,15 +71,14 @@ bool MQTTSubscriber::start()
 
             if(_client)
             {
-                mqtt::connect_options connOpts;
-                connOpts.set_keep_alive_interval(20);
-                connOpts.set_clean_session((_qos == 0));
+                _connOpts->set_keep_alive_interval(20);
+                _connOpts->set_clean_session((_qos == 0));
 
-                _cb = new callback(this, *_client, connOpts, *_subListener);
+                _cb = new callback(this, *_client, *_connOpts, *_subListener);
                 _client->set_callback(*_cb);
 
                 _logger->logInfo("MQTTSubscriber::Start Connecting to the MQTT server");
-                _client->connect(connOpts, nullptr, *_cb);
+                _client->connect(*_connOpts, nullptr, *_cb);
             }
             else
             {
@@ -131,6 +132,7 @@ bool MQTTSubscriber::stop()
             delete _subListener;
             delete _client;
             delete _cb;
+            delete _connOpts;
 
             _client = NULL;
 

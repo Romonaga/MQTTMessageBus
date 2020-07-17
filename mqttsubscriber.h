@@ -67,6 +67,7 @@ public:
     callback* _cb;
     mqtt::async_client* _client;
     action_listener* _subListener;
+    mqtt::connect_options* _connOpts;
 };
 
 class  action_listener : public virtual mqtt::iaction_listener
