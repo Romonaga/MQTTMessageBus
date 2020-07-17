@@ -136,7 +136,7 @@ class  callback : public virtual mqtt::callback,
             std::stringstream info;
             info << "reconnect Error: " << exc.what();
             parent_->_logger->logCritical(info.str());
-            exit(1);
+
         }
     }
 
@@ -145,13 +145,12 @@ class  callback : public virtual mqtt::callback,
     {
         std::stringstream info;
         info << "MQTTSubscriber Connection attempt failed Try: " << ++nretry_ << " Out Of: " << parent_->_numRetries;
-        parent_->_logger->logCritical(info.str());
+        parent_->_logger->logInfo(info.str());
 
         if (nretry_ > parent_->_numRetries)
         {
             parent_->_logger->logCritical("MQTTSubscriber Retries Exceeded.  Halting.");
-
-            exit(1);
+            return;
         }
         reconnect();
     }
