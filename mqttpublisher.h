@@ -10,8 +10,8 @@
 
 #include "mqtt/async_client.h"
 
-class callback;
-class action_listener;
+class callbackPub;
+class action_listenerPub;
 
 
 
@@ -49,8 +49,8 @@ public:
     int _numRetrys;
 
     mqtt::async_client* _client;
-    callback* _cb;
-    action_listener* _actionListener;
+    callbackPub* _cb;
+    action_listenerPub* _actionListener;
      mqtt::connect_options* _connOpts;
 
     DNRLogger* _logger;
@@ -58,7 +58,7 @@ public:
 
 };
 
-class  action_listener : public virtual mqtt::iaction_listener
+class  action_listenerPub : public virtual mqtt::iaction_listener
 {
     MQTTPublisher* parent_;
     std::string name_;
@@ -87,10 +87,10 @@ class  action_listener : public virtual mqtt::iaction_listener
     }
 
 public:
-    action_listener(MQTTPublisher* parent, const std::string& name) : parent_(parent), name_(name) {}
+    action_listenerPub(MQTTPublisher* parent, const std::string& name) : parent_(parent), name_(name) {}
 };
 
-class  callback : public virtual mqtt::callback,
+class  callbackPub : public virtual mqtt::callback,
                     public virtual mqtt::iaction_listener
 
 {
@@ -102,7 +102,7 @@ class  callback : public virtual mqtt::callback,
     mqtt::connect_options& connOpts_;
 
 
-    action_listener& subListener_;
+    action_listenerPub& subListener_;
 
 
     // This deomonstrates manually reconnecting to the broker by calling
@@ -188,7 +188,7 @@ class  callback : public virtual mqtt::callback,
     void delivery_complete(mqtt::delivery_token_ptr token) override {}
 
 public:
-    callback(MQTTPublisher* parent, mqtt::async_client& cli, mqtt::connect_options& connOpts, action_listener& subListener )
+    callbackPub(MQTTPublisher* parent, mqtt::async_client& cli, mqtt::connect_options& connOpts, action_listenerPub& subListener )
                 : parent_(parent), nretry_(0), cli_(cli), connOpts_(connOpts), subListener_(subListener) {}
 };
 

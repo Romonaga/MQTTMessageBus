@@ -38,14 +38,14 @@ void MQTTPublisher::init()
 
     _logger = DNRLogger::instance();
     _client = new mqtt::async_client(_address, _clientId);
-    _actionListener = new action_listener(this, "MQTTPublisher");
-    mqtt::connect_options connOpts;
+    _actionListener = new action_listenerPub(this, "MQTTPublisher");
+
     _connOpts = new mqtt::connect_options;
     _connOpts->set_keep_alive_interval(20);
     _connOpts->set_automatic_reconnect(true);
     _connOpts->set_connect_timeout(_timeout);
 
-    _cb = new callback(this, *_client, *_connOpts, *_actionListener);
+    _cb = new callbackPub(this, *_client, *_connOpts, *_actionListener);
     _client->set_callback(*_cb);
 
 }

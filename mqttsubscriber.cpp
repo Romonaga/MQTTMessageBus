@@ -65,7 +65,7 @@ bool MQTTSubscriber::start()
 
         if(_client == NULL)
         {
-            _subListener = new action_listener(this, "MQTTSubscriber");
+            _subListener = new action_listenerSub(this, "MQTTSubscriber");
             _client = new mqtt::async_client(_address, _clientID);
 
 
@@ -74,7 +74,7 @@ bool MQTTSubscriber::start()
                 _connOpts->set_keep_alive_interval(20);
                 _connOpts->set_clean_session((_qos == 0));
 
-                _cb = new callback(this, *_client, *_connOpts, *_subListener);
+                _cb = new callbackSub(this, *_client, *_connOpts, *_subListener);
                 _client->set_callback(*_cb);
 
                 _logger->logInfo("MQTTSubscriber::Start Connecting to the MQTT server");

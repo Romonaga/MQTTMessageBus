@@ -26,8 +26,8 @@
 // Callbacks for the success or failures of requested actions.
 // This could be used to initiate further action, but here we just log the
 // results to the console.
-class callback;
-class action_listener;
+class callbackSub;
+class action_listenerSub;
 
 
 class  MQTTSubscriber
@@ -64,13 +64,13 @@ public:
     int _timeOut;
     int _numRetries;
     DNRLogger* _logger;
-    callback* _cb;
+    callbackSub* _cb;
     mqtt::async_client* _client;
-    action_listener* _subListener;
+    action_listenerSub* _subListener;
     mqtt::connect_options* _connOpts;
 };
 
-class  action_listener : public virtual mqtt::iaction_listener
+class  action_listenerSub : public virtual mqtt::iaction_listener
 {
     MQTTSubscriber* parent_;
     std::string name_;
@@ -99,10 +99,10 @@ class  action_listener : public virtual mqtt::iaction_listener
     }
 
 public:
-    action_listener(MQTTSubscriber* parent, const std::string& name) : parent_(parent), name_(name) {}
+    action_listenerSub(MQTTSubscriber* parent, const std::string& name) : parent_(parent), name_(name) {}
 };
 
-class  callback : public virtual mqtt::callback,
+class  callbackSub : public virtual mqtt::callback,
                     public virtual mqtt::iaction_listener
 
 {
@@ -114,7 +114,7 @@ class  callback : public virtual mqtt::callback,
     mqtt::connect_options& connOpts_;
 
 
-    action_listener& subListener_;
+    action_listenerSub& subListener_;
 
 
     // This deomonstrates manually reconnecting to the broker by calling
@@ -211,7 +211,7 @@ class  callback : public virtual mqtt::callback,
     void delivery_complete(mqtt::delivery_token_ptr token) override {}
 
 public:
-    callback(MQTTSubscriber* parent, mqtt::async_client& cli, mqtt::connect_options& connOpts, action_listener& subListener )
+    callbackSub(MQTTSubscriber* parent, mqtt::async_client& cli, mqtt::connect_options& connOpts, action_listenerSub& subListener )
                 : parent_(parent), nretry_(0), cli_(cli), connOpts_(connOpts), subListener_(subListener) {}
 };
 
