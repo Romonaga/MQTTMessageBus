@@ -3,17 +3,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-MQTTSubscriber::MQTTSubscriber(const std::__cxx11::string &address, const std::__cxx11::string &topic, int qos, int timeout, int numRetries) :
+MQTTSubscriber::MQTTSubscriber(const std::string &address, const std::string &topic, int qos, int timeout, int numRetries) :
     _address(address), _topic(topic), _qos(qos), _timeOut(timeout), _numRetries(numRetries)
 {
 
     _logger = DNRLogger::instance();
-    _getDatacb = NULL;
-    _callee = NULL;
-    _client = NULL;
+    _getDatacb = nullptr;
+    _callee = nullptr;
+    _client = nullptr;
 
     char buffer[32];
-    srand(time(NULL));
+    srand(time(nullptr));
     unsigned int clid = rand();
     sprintf(buffer,"%d",clid);
     _clientID = buffer;

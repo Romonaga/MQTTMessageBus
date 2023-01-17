@@ -42,3 +42,5 @@ unix {
 }
 
 
+
+unix:!macx: LIBS += -lpaho-mqtt3a
